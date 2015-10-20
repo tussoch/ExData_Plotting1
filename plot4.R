@@ -8,7 +8,9 @@ elec$Global_active_power <- as.numeric(elec$Global_active_power)
 elec$Date2 <- as.Date(elec$Date, "%d/%m/%Y")
 elec <- elec[elec$Date2 >= '2007-02-01' & elec$Date2 <= '2007-02-02',]
 elec$dateandtime <- strptime(paste(elec$Date, elec$Time), "%d/%m/%Y %H:%M")
-elec$datetime <- max(elec$dateandtime) - min(elec$dateandtime)
+elec$datetime <- elec$dateandtime - min(elec$dateandtime)
+
+png("Plot4.png", width = 480, height = 480)
 
 par(mfrow = c(2,2))
 
@@ -16,7 +18,9 @@ par(mfrow = c(2,2))
 plot(elec$Global_active_power ~ elec$datetime, type = "l", xaxt = 'n',
      xlab = "", ylab = "Global Active Power", cex.axis = 0.7,
      cex.lab = 0.7)
-labels = c("Wed", "Thu", "Fri")
+labels = c(weekdays(min(as.Date((elec$dateandtime))), abbreviate = TRUE),
+        weekdays(min(as.Date((elec$dateandtime))) + 1, abbreviate = TRUE),
+        weekdays(min(as.Date((elec$dateandtime))) + 2, abbreviate = TRUE))
 axis(side = 1, at = c(0, median(elec$datetime), max(elec$datetime)),
      labels = labels, cex.axis = 0.7)
 
@@ -32,7 +36,9 @@ axis(side = 1, at = c(0, median(elec$datetime), max(elec$datetime)),
 plot(elec$Sub_metering_1 ~ elec$datetime, type = "l", xaxt = 'n',
      xlab = "", ylab = "Energy sub metering", cex.axis = 0.7,
      cex.lab = 0.7)
-labels = c("Wed", "Thu", "Fri")
+labels = c(weekdays(min(as.Date((elec$dateandtime))), abbreviate = TRUE),
+        weekdays(min(as.Date((elec$dateandtime))) + 1, abbreviate = TRUE),
+        weekdays(min(as.Date((elec$dateandtime))) + 2, abbreviate = TRUE))
 axis(side = 1, at = c(0, median(elec$datetime), max(elec$datetime)),
      labels = labels, cex.axis = 0.7)
 lines(elec$Sub_metering_2 ~ elec$datetime, col = "red")
@@ -47,11 +53,12 @@ plot(elec$Global_reactive_power ~ elec$datetime, type = "l",
      xaxt = 'n', ylab = "Global_reactive_power",
      xlab = "datetime", cex.axis = 0.7,
      cex.lab = 0.7)
-#labels = c("Wed", "Thu", "Fri")
+labels = c(weekdays(min(as.Date((elec$dateandtime))), abbreviate = TRUE),
+        weekdays(min(as.Date((elec$dateandtime))) + 1, abbreviate = TRUE),
+        weekdays(min(as.Date((elec$dateandtime))) + 2, abbreviate = TRUE))
 axis(side = 1, at = c(0, median(elec$datetime), max(elec$datetime)),
      labels = labels, cex.axis = 0.6)
 
 
-dev.copy(png, file = "plot4.png", width = 480, height = 480) # png file
-par(mfrow = c(1,1))
 dev.off() ## must close device
+par(mfrow = c(1,1))
